@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HRLeaveManagement.Application.DTOs.LeaveAllocation;
+using HRLeaveManagement.Application.DTOs.LeaveAllocation.Validators;
 using HRLeaveManagement.Application.Features.LeaveAllocations.Requests.Commands;
 using HRLeaveManagement.Application.Persistence.Contracts;
 using HRLeaveManagement.Domain;
@@ -25,6 +26,10 @@ namespace HRLeaveManagement.Application.Features.LeaveAllocations.Handlers.Comma
 
         public async Task<Unit> Handle(UpdateLeaveAllocationCommand request, CancellationToken cancellationToken)
         {
+            var validator = new UpdateLeaveAllocationDtoValidator(_leaveAllocationRepository);
+            var validationResult = await validator.ValidateAsync(request.UpdateLeaveAllocationDto, cancellationToken);
+            if (!validationResult.IsValid) throw new Exception();
+
             var leaveAllocation = await _leaveAllocationRepository.Get(request.UpdateLeaveAllocationDto.Id);
             _mapper.Map(request.UpdateLeaveAllocationDto, leaveAllocation);
             await _leaveAllocationRepository.Update(leaveAllocation);

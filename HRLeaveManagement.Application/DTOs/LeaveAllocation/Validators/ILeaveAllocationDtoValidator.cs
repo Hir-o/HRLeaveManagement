@@ -8,22 +8,19 @@ using System.Threading.Tasks;
 
 namespace HRLeaveManagement.Application.DTOs.LeaveAllocation.Validators
 {
-    public class LeaveAllocationDtoValidator : AbstractValidator<LeaveAllocationDto>
+    public class ILeaveAllocationDtoValidator : AbstractValidator<ILeaveAllocationDto>
     {
         private readonly ILeaveAllocationRepository _leaveAllocationRepository;
 
-        public LeaveAllocationDtoValidator(ILeaveAllocationRepository leaveAllocationRepository)
+        public ILeaveAllocationDtoValidator(ILeaveAllocationRepository leaveAllocationRepository)
         {
             _leaveAllocationRepository = leaveAllocationRepository;
-
-            RuleFor(x => x.Id)
-             .GreaterThan(0).WithMessage("{PropertyName} must be greater than {ComparisonValue}.");
 
             RuleFor(x => x.NumberOfDays)
                 .GreaterThan(0).WithMessage("{PropertyName} should be greater than {ComparisonValue}");
 
             RuleFor(x => x.Period)
-                .GreaterThan(0).WithMessage("{PropertyName} should be greater than {ComparisonValue}");
+                .GreaterThan(DateTime.Now.Year).WithMessage("{PropertyName} should be greater than {ComparisonValue}");
 
             RuleFor(x => x.LeaveTypeId)
                 .GreaterThan(0).WithMessage("{PropertyName} must be greater than {ComparisonValue}.")
@@ -34,5 +31,4 @@ namespace HRLeaveManagement.Application.DTOs.LeaveAllocation.Validators
                 }).WithMessage("{PropertyNAme} does not exist.");
         }
     }
-}
 }

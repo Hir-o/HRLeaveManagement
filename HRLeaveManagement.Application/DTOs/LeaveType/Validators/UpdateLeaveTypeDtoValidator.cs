@@ -11,13 +11,10 @@ namespace HRLeaveManagement.Application.DTOs.LeaveType.Validators
     {
         public UpdateLeaveTypeDtoValidator()
         {
+            Include(new ILeaveTypeDtoValidator());
+
             RuleFor(x => x.Id)
                 .GreaterThan(0).WithMessage("{PropertyName} must be greater than {ComparisonValue}.");
-
-            RuleFor(x => x.LeaveName)
-                .NotEmpty().WithMessage("{PropertyName} is required.")
-                .NotNull().WithMessage("{PropertyName} must not be null.")
-                .MaximumLength(50).WithMessage("{PropertyName} must not exceed {ComparisonValue} characters.");
         }
     }
 }
