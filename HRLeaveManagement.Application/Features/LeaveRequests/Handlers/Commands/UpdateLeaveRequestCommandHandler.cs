@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using FluentValidation;
 using HRLeaveManagement.Application.DTOs.LeaveRequest.Validators;
+using HRLeaveManagement.Application.Exceptions;
 using HRLeaveManagement.Application.Features.LeaveRequests.Requests.Commands;
 using HRLeaveManagement.Application.Persistence.Contracts;
+using HRLeaveManagement.Application.Responses;
 using HRLeaveManagement.Domain;
 using MediatR;
 using System;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace HRLeaveManagement.Application.Features.LeaveRequests.Handlers.Commands
 {
-    public class UpdateLeaveRequestCommandHandler : IRequestHandler<UpdateLeaveRequestCommand, Unit>
+    public class UpdateLeaveRequestCommandHandler : IRequestHandler<UpdateLeaveRequestCommand, BaseCommandResponse>
     {
         private readonly ILeaveRequestRepository _leaveRequestRepository;
         private readonly IMapper _mapper;
@@ -24,11 +25,18 @@ namespace HRLeaveManagement.Application.Features.LeaveRequests.Handlers.Commands
             _mapper = mapper;
         }
 
-        public async Task<Unit> Handle(UpdateLeaveRequestCommand request, CancellationToken cancellationToken)
+        public async Task<BaseCommandResponse> Handle(UpdateLeaveRequestCommand request, CancellationToken cancellationToken)
         {
+            var response = new BaseCommandResponse();
             var validator = new UpdateLeaveRequestDtoValidator(_leaveRequestRepository);
             var validationResult = await validator.ValidateAsync(request.UpdateLeaveRequestDto);
-            if (!validationResult.IsValid) throw new Exception();
+            if (!validationResult.IsValid)
+            {
+                response.Success = false;
+                response.Message = "LeaveRequest update failed.";
+                response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+                throw new ValidationException(validationResult);
+            }
 
             LeaveRequest leaveRequest = await _leaveRequestRepository.Get(request.Id);
             if (!ReferenceEquals(request.ChangeLeaveRequestApprovalDto, null))
@@ -40,7 +48,8 @@ namespace HRLeaveManagement.Application.Features.LeaveRequests.Handlers.Commands
                 await _leaveRequestRepository.Update(leaveRequest);
             }
 
-            return Unit.Value;
+            response.Message = "LeaveRequest update successful.";
+            return response;
         }
     }
 }

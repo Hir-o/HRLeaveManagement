@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using HRLeaveManagement.Application.DTOs.LeaveType.Validators;
+using HRLeaveManagement.Application.Exceptions;
 using HRLeaveManagement.Application.Features.LeaveTypes.Requests.Commands;
 using HRLeaveManagement.Application.Persistence.Contracts;
+using HRLeaveManagement.Application.Responses;
 using HRLeaveManagement.Domain;
 using MediatR;
 using System;
@@ -12,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace HRLeaveManagement.Application.Features.LeaveTypes.Handlers.Commands
 {
-    public class CreateLeaveTypeCommandHandler : IRequestHandler<CreateLeaveTypeCommand, int>
+    public class CreateLeaveTypeCommandHandler : IRequestHandler<CreateLeaveTypeCommand, BaseCommandResponse>
     {
         private readonly ILeaveTypeRepository _leaveTypeRepository;
         private readonly IMapper _mapper;
@@ -23,15 +25,26 @@ namespace HRLeaveManagement.Application.Features.LeaveTypes.Handlers.Commands
             _mapper = mapper;
         }
 
-        public async Task<int> Handle(CreateLeaveTypeCommand request, CancellationToken cancellationToken)
+        public async Task<BaseCommandResponse> Handle(CreateLeaveTypeCommand request, CancellationToken cancellationToken)
         {
+            var response = new BaseCommandResponse();
             var validator = new CreateLeaveTypeDtoValidator();
             var validationResult = await validator.ValidateAsync(request.CreateLeaveTypeDto);
-            if (!validationResult.IsValid) throw new Exception();
+            if (!validationResult.IsValid)
+            {
+                response.Success = false;
+                response.Message = "LeaveType creation failed.";
+                response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+                throw new ValidationException(validationResult);
+            }
 
             var leaveType = _mapper.Map<LeaveType>(request.CreateLeaveTypeDto);
             leaveType = await _leaveTypeRepository.Add(leaveType);
-            return leaveType.Id;
+
+            response.Id = leaveType.Id;
+            response.Message = "LeaveType creation successfull.";
+
+            return response;
         }
     }
 }

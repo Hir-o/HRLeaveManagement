@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using HRLeaveManagement.Application.DTOs.LeaveAllocation.Validators;
-using HRLeaveManagement.Application.DTOs.LeaveType.Validators;
+using HRLeaveManagement.Application.Exceptions;
 using HRLeaveManagement.Application.Features.LeaveAllocations.Requests.Commands;
 using HRLeaveManagement.Application.Persistence.Contracts;
+using HRLeaveManagement.Application.Responses;
 using HRLeaveManagement.Domain;
 using MediatR;
 using System;
@@ -26,12 +27,20 @@ namespace HRLeaveManagement.Application.Features.LeaveAllocations.Handlers.Comma
 
         public async Task<int> Handle(CreateLeaveAllocationCommand request, CancellationToken cancellationToken)
         {
+            var response = new BaseCommandResponse();
             var validator = new CreateLeaveAllocationDtoValidator(_leaveAllocationRepository);
             var validationResult = await validator.ValidateAsync(request.CreateLeaveAllocationDto, cancellationToken);
-            if (!validationResult.IsValid) throw new Exception();
+            if (!validationResult.IsValid)
+            {
+                response.Success = false;
+                response.Message = "LeaveAllocation creation failed.";
+                response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+                throw new ValidationException(validationResult);
+            }
 
             var leaveAllocation = _mapper.Map<LeaveAllocation>(request.CreateLeaveAllocationDto);
             leaveAllocation = await _leaveAllocationRepository.Add(leaveAllocation);
+            response.Message = "LeaveAllocation creation successful.";
             return leaveAllocation.Id;
         }
     }

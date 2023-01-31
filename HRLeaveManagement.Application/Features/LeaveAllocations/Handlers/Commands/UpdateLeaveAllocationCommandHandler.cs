@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using HRLeaveManagement.Application.DTOs.LeaveAllocation;
 using HRLeaveManagement.Application.DTOs.LeaveAllocation.Validators;
+using HRLeaveManagement.Application.Exceptions;
 using HRLeaveManagement.Application.Features.LeaveAllocations.Requests.Commands;
 using HRLeaveManagement.Application.Persistence.Contracts;
-using HRLeaveManagement.Domain;
+using HRLeaveManagement.Application.Responses;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace HRLeaveManagement.Application.Features.LeaveAllocations.Handlers.Commands
 {
-    public class UpdateLeaveAllocationCommandHandler : IRequestHandler<UpdateLeaveAllocationCommand, Unit>
+    public class UpdateLeaveAllocationCommandHandler : IRequestHandler<UpdateLeaveAllocationCommand, BaseCommandResponse>
     {
         private readonly ILeaveAllocationRepository _leaveAllocationRepository;
         private readonly IMapper _mapper;
@@ -24,16 +24,24 @@ namespace HRLeaveManagement.Application.Features.LeaveAllocations.Handlers.Comma
             _mapper = mapper;
         }
 
-        public async Task<Unit> Handle(UpdateLeaveAllocationCommand request, CancellationToken cancellationToken)
+        public async Task<BaseCommandResponse> Handle(UpdateLeaveAllocationCommand request, CancellationToken cancellationToken)
         {
+            var response = new BaseCommandResponse();
             var validator = new UpdateLeaveAllocationDtoValidator(_leaveAllocationRepository);
             var validationResult = await validator.ValidateAsync(request.UpdateLeaveAllocationDto, cancellationToken);
-            if (!validationResult.IsValid) throw new Exception();
+            if (!validationResult.IsValid)
+            {
+                response.Success = false;
+                response.Message = "LeaveAllocation update failed.";
+                response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+                throw new ValidationException(validationResult); 
+            }
 
             var leaveAllocation = await _leaveAllocationRepository.Get(request.UpdateLeaveAllocationDto.Id);
             _mapper.Map(request.UpdateLeaveAllocationDto, leaveAllocation);
             await _leaveAllocationRepository.Update(leaveAllocation);
-            return Unit.Value;
+            response.Message = "LeaveAllocation update successful.";
+            return response;
         }
     }
 }

@@ -10,9 +10,13 @@ namespace HRLeaveManagement.Application.DTOs.LeaveRequest.Validators
 {
     public class UpdateLeaveRequestDtoValidator : AbstractValidator<UpdateLeaveRequestDto>
     {
-        public UpdateLeaveRequestDtoValidator()
+        private ILeaveRequestRepository _leaveRequestRepository;
+
+        public UpdateLeaveRequestDtoValidator(ILeaveRequestRepository leaveRequestRepository)
         {
-            Include(new ILeaveRequestDtoValidator());
+            _leaveRequestRepository = leaveRequestRepository;
+
+            Include(new ILeaveRequestDtoValidator(_leaveRequestRepository));
 
             RuleFor(x => x.Id)
                 .GreaterThan(0).WithMessage("{PropertyName} must be greater than {ComparisonValue}.");
