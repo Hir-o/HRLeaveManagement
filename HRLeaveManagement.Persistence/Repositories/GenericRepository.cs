@@ -1,4 +1,4 @@
-﻿using HRLeaveManagement.Application.Persistence.Contracts;
+﻿using HRLeaveManagement.Application.Contracts.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
