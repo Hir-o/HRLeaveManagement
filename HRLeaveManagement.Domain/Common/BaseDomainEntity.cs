@@ -13,5 +13,6 @@ namespace HRLeaveManagement.Domain.Common
         public string CreatedBy { get; set; }
         public DateTime LastModifiedDate { get; set; }
         public string LastModifiedBy { get; set;}
+        public int CurrentModifiedNumber { get; set; }
     }
 }

@@ -11,6 +11,5 @@ namespace HRLeaveManagement.Application.Persistence.Contracts
     {
         Task<LeaveAllocation> GetLeaveAllocationWithDetails(int id);
         Task<List<LeaveAllocation>> GetLeaveAllocationsWithDetails();
-        Task<LeaveAllocation> UpdateLeaveAllocationWithDetails(LeaveAllocation leaveAllocation);
     }
 }

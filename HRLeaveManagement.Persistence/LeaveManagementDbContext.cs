@@ -28,11 +28,16 @@ namespace HRLeaveManagement.Persistence
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             foreach (var entry in ChangeTracker.Entries<BaseDomainEntity>())
-            {   
+            {
+                entry.Entity.CurrentModifiedNumber++;
                 entry.Entity.LastModifiedDate = DateTime.Now;
+                //todo add last modified by user
+                entry.Entity.LastModifiedBy = "Some User";
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.DateCreated = DateTime.Now;
+                    //todo created by user
+                    entry.Entity.CreatedBy = "Some User";
                 }
             }
 
