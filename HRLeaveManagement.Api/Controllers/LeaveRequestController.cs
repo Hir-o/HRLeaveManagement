@@ -54,7 +54,7 @@ namespace HRLeaveManagement.Api.Controllers
         }
 
         // PUT api/<LeaveRequestController>/changeapprovals/5
-        [HttpPut("{changeapproval/id}")]
+        [HttpPut("changeapproval/{id}")]
         public async Task<ActionResult<BaseCommandResponse>> ChangeApproval([FromBody] ChangeLeaveRequestApprovalDto leaveRequest)
         {
             var response = await _mediator.Send(new UpdateLeaveRequestCommand { ChangeLeaveRequestApprovalDto = leaveRequest });

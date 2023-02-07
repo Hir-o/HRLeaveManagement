@@ -1,6 +1,7 @@
 using HRLeaveManagement.Application;
 using HRLeaveManagement.Infrastructure;
 using HRLeaveManagement.Persistence;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,7 @@ builder.Services.ConfigureApplicationServices();
 builder.Services.ConfigureInfrastructureServices(builder.Configuration);
 builder.Services.ConfigurePersistenceServices(builder.Configuration);
 
-builder.Services.AddCors( o =>
+builder.Services.AddCors(o =>
 {
     o.AddPolicy("CorsPolicy", 
         corsBuilder => corsBuilder.AllowAnyOrigin()
