@@ -35,7 +35,7 @@ namespace HRLeaveManagement.Application.Features.LeaveTypes.Handlers.Commands
                 response.Success = false;
                 response.Message = "LeaveType update failed.";
                 response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
-                throw new ValidationException(validationResult);
+                return response;
             }
 
             var leaveType = await _leaveTypeRepository.Get(request.UpdateLeaveTypeDto.Id);

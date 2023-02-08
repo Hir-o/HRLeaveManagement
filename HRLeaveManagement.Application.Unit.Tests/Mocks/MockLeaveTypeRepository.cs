@@ -1,4 +1,5 @@
-﻿using HRLeaveManagement.Application.Contracts.Persistence;
+﻿using FluentValidation.Results;
+using HRLeaveManagement.Application.Contracts.Persistence;
 using HRLeaveManagement.Domain;
 using Moq;
 using System;
@@ -35,6 +36,14 @@ namespace HRLeaveManagement.Application.Unit.Tests.Mocks
 
             var mockRepo = new Mock<ILeaveTypeRepository>();
             mockRepo.Setup(m => m.GetLeaveTypesWithDetails()).ReturnsAsync(leaveTypes);
+            mockRepo.Setup(m => m.GetLeaveTypeWithDetails(It.IsAny<int>())).ReturnsAsync((int id) => 
+            {
+                foreach(var leaveType in leaveTypes)
+                    if (leaveType.Id == id) 
+                        return leaveType;
+                return null;
+            });
+            mockRepo.Setup(m => m.Update(It.IsAny<LeaveType>()));
             mockRepo.Setup(m => m.Add(It.IsAny<LeaveType>())).ReturnsAsync((LeaveType leaveType) => 
             {
                 leaveTypes.Add(leaveType);

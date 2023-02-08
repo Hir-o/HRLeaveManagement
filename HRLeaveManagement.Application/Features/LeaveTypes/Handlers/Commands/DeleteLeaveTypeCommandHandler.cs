@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace HRLeaveManagement.Application.Features.LeaveTypes.Handlers.Commands
 {
-    public class DeleteLeaveTypeCommandHandler : IRequestHandler<DeleteLeaveTypeCommand>
+    public class DeleteLeaveTypeCommandHandler : IRequestHandler<DeleteLeaveTypeCommand, BaseCommandResponse>
     {
         private readonly ILeaveTypeRepository _leaveTypeRepository;
         private readonly IMapper _mapper;
@@ -23,7 +23,7 @@ namespace HRLeaveManagement.Application.Features.LeaveTypes.Handlers.Commands
             _mapper = mapper;
         }
 
-        public async Task<Unit> Handle(DeleteLeaveTypeCommand request, CancellationToken cancellationToken)
+        public async Task<BaseCommandResponse> Handle(DeleteLeaveTypeCommand request, CancellationToken cancellationToken)
         {
             var response = new BaseCommandResponse();
             var leaveType = await _leaveTypeRepository.Get(request.Id);
@@ -31,12 +31,12 @@ namespace HRLeaveManagement.Application.Features.LeaveTypes.Handlers.Commands
             {
                 response.Success = false;
                 response.Message = $"LeaveType deletion failed. Missing LeaveType with ID {request.Id}";
-                throw new NotFoundException("LeaveType", request.Id);
+                return response;
             }
 
             await _leaveTypeRepository.Delete(leaveType);
             response.Message = "LeaveType deletion successful.";
-            return Unit.Value;
+            return response;
         }
     }
 }

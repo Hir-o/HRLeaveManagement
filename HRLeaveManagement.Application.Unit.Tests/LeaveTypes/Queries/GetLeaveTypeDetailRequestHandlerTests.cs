@@ -1,27 +1,30 @@
 ﻿using AutoMapper;
 using HRLeaveManagement.Application.Contracts.Persistence;
+using HRLeaveManagement.Application.DTOs.LeaveType;
+using HRLeaveManagement.Application.Features.LeaveTypes.Handlers.Commands;
 using HRLeaveManagement.Application.Features.LeaveTypes.Handlers.Queries;
+using HRLeaveManagement.Application.Features.LeaveTypes.Requests.Queries;
 using HRLeaveManagement.Application.Profiles;
 using HRLeaveManagement.Application.Unit.Tests.Mocks;
-using HRLeaveManagement.Application.Features.LeaveTypes.Requests.Queries;
 using Moq;
+using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using Shouldly;
-using HRLeaveManagement.Application.DTOs.LeaveType;
 
 namespace HRLeaveManagement.Application.Unit.Tests.LeaveTypes.Queries
 {
-    public class GetLeaveTypeListRequestHandlerTests
+    public class GetLeaveTypeDetailRequestHandlerTests
     {
         private readonly IMapper _mapper;
         private readonly Mock<ILeaveTypeRepository> _mockRepo;
+        private readonly int leaveTypeId = 2;
 
-        public GetLeaveTypeListRequestHandlerTests()
+        public GetLeaveTypeDetailRequestHandlerTests()
         {
             _mockRepo = MockLeaveTypeRepository.GetLeaveTypeRepository();
 
@@ -34,13 +37,12 @@ namespace HRLeaveManagement.Application.Unit.Tests.LeaveTypes.Queries
         }
 
         [Fact]
-        public async Task GetLeaveTypeListTest()
+        public async Task Get_Valid_LeaveType_Detail()
         {
-            var handler = new GetLeaveTypeListRequestHandler(_mockRepo.Object, _mapper);
-            var result = await handler.Handle(new GetLeaveTypeListRequest(), CancellationToken.None);
+            var handler = new GetLeaveTypeDetailRequestHandler(_mockRepo.Object, _mapper);
+            var result = await handler.Handle(new GetLeaveTypeDetailRequest() { Id = leaveTypeId }, CancellationToken.None);
 
-            result.ShouldBeOfType<List<LeaveTypeDto>>();
-            result.Count.ShouldBe(2);
+            result.ShouldBeOfType<LeaveTypeDto>();
         }
     }
 }

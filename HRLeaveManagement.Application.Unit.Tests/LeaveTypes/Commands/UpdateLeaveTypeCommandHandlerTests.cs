@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using FluentValidation;
 using HRLeaveManagement.Application.Contracts.Persistence;
 using HRLeaveManagement.Application.DTOs.LeaveType;
 using HRLeaveManagement.Application.Features.LeaveTypes.Handlers.Commands;
@@ -9,26 +8,26 @@ using HRLeaveManagement.Application.Features.LeaveTypes.Requests.Queries;
 using HRLeaveManagement.Application.Profiles;
 using HRLeaveManagement.Application.Responses;
 using HRLeaveManagement.Application.Unit.Tests.Mocks;
+using HRLeaveManagement.Domain;
 using Moq;
 using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace HRLeaveManagement.Application.Unit.Tests.LeaveTypes.Commands
 {
-    public class CreateLeaveTypeCommandHandlerTests
+    public class UpdateLeaveTypeCommandHandlerTests
     {
-        private IMapper _mapper;
-        private Mock<ILeaveTypeRepository> _mockRepo;
-        private readonly CreateLeaveTypeDto _leaveTypeDto;
-        private readonly CreateLeaveTypeCommandHandler _handler;
+        private readonly IMapper _mapper;
+        private readonly Mock<ILeaveTypeRepository> _mockRepo;
+        private readonly UpdateLeaveTypeCommandHandler _handler;
+        private readonly UpdateLeaveTypeDto _leaveType;
 
-        public CreateLeaveTypeCommandHandlerTests()
+        public UpdateLeaveTypeCommandHandlerTests()
         {
             _mockRepo = MockLeaveTypeRepository.GetLeaveTypeRepository();
 
@@ -36,37 +35,34 @@ namespace HRLeaveManagement.Application.Unit.Tests.LeaveTypes.Commands
             {
                 c.AddProfile<MappingProfile>();
             });
-
             _mapper = mapperConfig.CreateMapper();
-            _handler = new CreateLeaveTypeCommandHandler(_mockRepo.Object, _mapper);
-            _leaveTypeDto = new CreateLeaveTypeDto
+            _handler = new UpdateLeaveTypeCommandHandler(_mockRepo.Object, _mapper);
+            _leaveType = new UpdateLeaveTypeDto
             {
-                DefaultDays = 5,
-                LeaveName = "New Leave Name Test"
+                Id = 1,
+                LeaveName = "Test Changed",
+                DefaultDays = 4
             };
         }
 
         [Fact]
-        public async Task Valid_LeaveType_Added()
+        public async Task Valid_LeaveType_Update()
         {
-            var result = await _handler.Handle(new CreateLeaveTypeCommand() { CreateLeaveTypeDto = _leaveTypeDto }, CancellationToken.None);
+            var result = await _handler.Handle(new UpdateLeaveTypeCommand() { UpdateLeaveTypeDto = _leaveType }, CancellationToken.None);
 
-            var leaveTypes = await _mockRepo.Object.GetLeaveTypesWithDetails();
             result.ShouldBeOfType<BaseCommandResponse>();
             result.Success.ShouldBeTrue();
-            leaveTypes.Count.ShouldBe(3);
         }
 
         [Fact]
-        public async Task InValid_LeaveType_Added()
+        public async Task Invalid_LeaveType_Update()
         {
-            _leaveTypeDto.DefaultDays = -1;
-            var leaveTypes = await _mockRepo.Object.GetLeaveTypesWithDetails();
-            var result = await _handler.Handle(new CreateLeaveTypeCommand() { CreateLeaveTypeDto = _leaveTypeDto}, CancellationToken.None);
+            _leaveType.DefaultDays = -1;
+            var result = await _handler.Handle(new UpdateLeaveTypeCommand() { UpdateLeaveTypeDto = _leaveType }, CancellationToken.None);
+
             result.ShouldBeOfType<BaseCommandResponse>();
             result.Success.ShouldBeFalse();
-            result.Errors.Count.ShouldBeGreaterThan(0);
-            leaveTypes.Count.ShouldBe(2);
+            result.Errors.Count.ShouldBeGreaterThanOrEqualTo(1);
         }
     }
 }
