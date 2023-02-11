@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace HRLeaveManagement.Application.Features.LeaveAllocations.Handlers.Commands
 {
-    public class DeleteLeaveAllocationCommandHandler : IRequestHandler<DeleteLeaveAllocationCommand>
+    public class DeleteLeaveAllocationCommandHandler : IRequestHandler<DeleteLeaveAllocationCommand, BaseCommandResponse>
     {
         private readonly ILeaveAllocationRepository _leaveAllocationRepository;
         private readonly IMapper _mapper;
@@ -23,7 +23,7 @@ namespace HRLeaveManagement.Application.Features.LeaveAllocations.Handlers.Comma
             _mapper = mapper;
         }
 
-        public async Task<Unit> Handle(DeleteLeaveAllocationCommand request, CancellationToken cancellationToken)
+        public async Task<BaseCommandResponse> Handle(DeleteLeaveAllocationCommand request, CancellationToken cancellationToken)
         {
             var response = new BaseCommandResponse();
             var leaveAllocation = await _leaveAllocationRepository.Get(request.Id);
@@ -31,12 +31,12 @@ namespace HRLeaveManagement.Application.Features.LeaveAllocations.Handlers.Comma
             {
                 response.Success = false;
                 response.Message = "LeaveAllocation deletion failed.";
-                throw new NotFoundException("LeaveAllocation", request.Id);
+                return response;
             }
 
             await _leaveAllocationRepository.Delete(leaveAllocation);
             response.Message = "LeaveAllocation deletion successful.";
-            return Unit.Value;
+            return response;
         }
     }
 }

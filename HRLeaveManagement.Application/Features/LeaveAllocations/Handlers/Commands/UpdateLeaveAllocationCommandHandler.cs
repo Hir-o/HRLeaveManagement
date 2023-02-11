@@ -34,7 +34,7 @@ namespace HRLeaveManagement.Application.Features.LeaveAllocations.Handlers.Comma
                 response.Success = false;
                 response.Message = "LeaveAllocation update failed.";
                 response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
-                throw new ValidationException(validationResult); 
+                return response;
             }
 
             var leaveAllocation = await _leaveAllocationRepository.Get(request.UpdateLeaveAllocationDto.Id);

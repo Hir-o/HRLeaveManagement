@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentValidation.Results;
 
 namespace HRLeaveManagement.Application.Features.LeaveRequests.Handlers.Commands
 {
@@ -29,13 +30,19 @@ namespace HRLeaveManagement.Application.Features.LeaveRequests.Handlers.Commands
         {
             var response = new BaseCommandResponse();
             var validator = new UpdateLeaveRequestDtoValidator(_leaveRequestRepository);
-            var validationResult = await validator.ValidateAsync(request.UpdateLeaveRequestDto);
+            var approvalValidator = new ChangeLeaveRequestApprovalValidator(_leaveRequestRepository);
+            ValidationResult validationResult;
+            if (!ReferenceEquals(request.ChangeLeaveRequestApprovalDto, null))
+                validationResult = await approvalValidator.ValidateAsync(request.ChangeLeaveRequestApprovalDto);
+            else 
+                validationResult = await validator.ValidateAsync(request.UpdateLeaveRequestDto);
+
             if (!validationResult.IsValid)
             {
                 response.Success = false;
                 response.Message = "LeaveRequest update failed.";
                 response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
-                throw new ValidationException(validationResult);
+                return response;
             }
 
             LeaveRequest leaveRequest = await _leaveRequestRepository.Get(request.Id);

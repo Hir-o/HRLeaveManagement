@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace HRLeaveManagement.Application.Features.LeaveAllocations.Handlers.Commands
 {
-    public class CreateLeaveAllocationCommandHandler : IRequestHandler<CreateLeaveAllocationCommand, int>
+    public class CreateLeaveAllocationCommandHandler : IRequestHandler<CreateLeaveAllocationCommand, BaseCommandResponse>
     {
         private readonly ILeaveAllocationRepository _leaveAllocationRepository;
         private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ namespace HRLeaveManagement.Application.Features.LeaveAllocations.Handlers.Comma
             _mapper = mapper;
         }
 
-        public async Task<int> Handle(CreateLeaveAllocationCommand request, CancellationToken cancellationToken)
+        public async Task<BaseCommandResponse> Handle(CreateLeaveAllocationCommand request, CancellationToken cancellationToken)
         {
             var response = new BaseCommandResponse();
             var validator = new CreateLeaveAllocationDtoValidator(_leaveAllocationRepository);
@@ -35,13 +35,13 @@ namespace HRLeaveManagement.Application.Features.LeaveAllocations.Handlers.Comma
                 response.Success = false;
                 response.Message = "LeaveAllocation creation failed.";
                 response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
-                throw new ValidationException(validationResult);
+                return response;
             }
 
             var leaveAllocation = _mapper.Map<LeaveAllocation>(request.CreateLeaveAllocationDto);
             leaveAllocation = await _leaveAllocationRepository.Add(leaveAllocation);
             response.Message = "LeaveAllocation creation successful.";
-            return leaveAllocation.Id;
+            return response;
         }
     }
 }

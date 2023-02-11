@@ -22,7 +22,7 @@ namespace HRLeaveManagement.Application.DTOs.LeaveRequest.Validators
             
             RuleFor(x => x.EndDate)
                 .NotNull()
-                .GreaterThan(x => x.EndDate).WithMessage("{PropertyName} must be greater than the {ComparisonValue}.");
+                .GreaterThan(x => x.StartDate).WithMessage("{PropertyName} must be greater than the {ComparisonValue}.");
 
             RuleFor(x => x.LeaveTypeId)
                 .GreaterThan(0).WithMessage("{PropertyName} must be greater than {ComparisonValue}")
