@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRLeaveManagement.Api", "HR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRLeaveManagement.Application.Unit.Tests", "HRLeaveManagement.Application.Unit.Tests\HRLeaveManagement.Application.Unit.Tests.csproj", "{CCE4188D-1104-45A3-AD03-3921AA8A16D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR.LeaveManagement.MVC", "HR.LeaveManagement.MVC\HR.LeaveManagement.MVC.csproj", "{1A19F301-767D-4B22-B5BB-8BD1E1680C4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HR.LeaveManagement.MVC", "HR.LeaveManagement.MVC\HR.LeaveManagement.MVC.csproj", "{1A19F301-767D-4B22-B5BB-8BD1E1680C4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
