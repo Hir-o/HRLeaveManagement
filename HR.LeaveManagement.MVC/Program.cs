@@ -7,12 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient<IClient, Client>(cl => cl.BaseAddress = new Uri("https://localhost:44378"));
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();
-//builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
-//builder.Services.AddScoped<ILeaveAllocationService, LeaveAllocationService>();
 builder.Services.AddSingleton<ILocalStorageService, LocalStorageService>();
+builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();
+builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
+builder.Services.AddScoped<ILeaveAllocationService, LeaveAllocationService>();
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddControllersAsServices();
 
 var app = builder.Build();
 

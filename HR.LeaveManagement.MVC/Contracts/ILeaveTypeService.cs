@@ -7,8 +7,8 @@ namespace HR.LeaveManagement.MVC.Contracts
     {
         Task<LeaveTypeVM> GetLeaveTypeWithDetails(int id);
         Task<List<LeaveTypeVM>> GetLeaveTypes();
-        Task UpdateLeaveType(LeaveTypeVM leaveType);
-        Task DeleteLeaveType(LeaveTypeVM leaveType);
+        Task<Response<int>> UpdateLeaveType(int id, LeaveTypeVM leaveType);
+        Task<Response<int>> DeleteLeaveType(int id);
         Task<Response<int>> CreateLeaveType(CreateLeaveTypeVM leaveType);
     }
 }
