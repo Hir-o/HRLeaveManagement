@@ -1,6 +1,7 @@
 using HRLeaveManagement.Application;
 using HRLeaveManagement.Infrastructure;
 using HRLeaveManagement.Persistence;
+using HRLeaveManagement.Identity;
 using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureApplicationServices();
 builder.Services.ConfigureInfrastructureServices(builder.Configuration);
 builder.Services.ConfigurePersistenceServices(builder.Configuration);
+builder.Services.ConfigureIdentityServices(builder.Configuration);
 
 builder.Services.AddCors(o =>
 {
