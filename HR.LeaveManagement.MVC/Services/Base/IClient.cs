@@ -1,4 +1,5 @@
-﻿namespace HR.LeaveManagement.MVC.Services.Base
+﻿
+namespace HR.LeaveManagement.MVC.Services.Base
 {
     public partial interface IClient
     {
