@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/HRLeaveManagement.Application.Unit.Tests/Properties/launchSettings.json
+/HRLeaveManagement.Domain/Properties/launchSettings.json
+/HRLeaveManagement.Infrastructure/Properties/launchSettings.json
+/HRLeaveManagement.Persistence/Properties/launchSettings.json
+/.gitignore
+/.gitignore
