@@ -7,11 +7,6 @@ using HRLeaveManagement.Application.Profiles;
 using HRLeaveManagement.Application.Unit.Tests.Mocks;
 using Moq;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace HRLeaveManagement.Application.Unit.Tests.LeaveRequests.Queries
@@ -34,7 +29,6 @@ namespace HRLeaveManagement.Application.Unit.Tests.LeaveRequests.Queries
         [Fact]
         public async Task Get_LeaveRequest_List()
         {
-            //todo
             var handler = new GetLeaveRequestListRequestHandler(_mockRepo.Object, _mapper);
             var result = await handler.Handle(new GetLeaveRequestListRequest(), CancellationToken.None);
 
