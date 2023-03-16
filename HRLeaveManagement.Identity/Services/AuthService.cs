@@ -47,7 +47,7 @@ namespace HRLeaveManagement.Identity.Services
             return response;
         }
 
-        public Task<RegistrationResponse> Register(RegistrationRequest request)
+        public async Task<RegistrationResponse> Register(RegistrationRequest request)
         {
             throw new NotImplementedException();
         }
