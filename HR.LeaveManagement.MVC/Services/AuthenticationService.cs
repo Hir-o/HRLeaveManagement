@@ -40,14 +40,16 @@ namespace HR.LeaveManagement.MVC.Services
             }
         }
 
-        public Task Logout()
+        public async Task Logout()
         {
-            throw new NotImplementedException();
+            _localStorage.ClearStorage(new List<string> { "token" });
+            await _httpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
-        public Task<bool> Register(string firstName, string lastName, string userName, string email, string password)
+        public async Task<bool> Register(string firstName, string lastName, string userName, string email, string password)
         {
-            throw new NotImplementedException();
+            var registrationResponse = await _client.RegisterAsync(firstName, lastName, email, userName, password);
+            return !string.IsNullOrEmpty(registrationResponse.Id);
         }
 
         private IList<Claim> ParseClaims(JwtSecurityToken tokenContent)
