@@ -1,6 +1,7 @@
 using HR.LeaveManagement.MVC.Contracts;
 using HR.LeaveManagement.MVC.Services;
 using HR.LeaveManagement.MVC.Services.Base;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ builder.Services.AddSingleton<ILocalStorageService, LocalStorageService>();
 builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();
 builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
 builder.Services.AddScoped<ILeaveAllocationService, LeaveAllocationService>();
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddControllersAsServices();
 
