@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using IAuthenticationService = HR.LeaveManagement.MVC.Contracts.IAuthenticationService;
 
 namespace HR.LeaveManagement.MVC.Services
 {

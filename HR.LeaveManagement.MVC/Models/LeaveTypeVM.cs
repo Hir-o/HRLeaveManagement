@@ -10,7 +10,7 @@ namespace HR.LeaveManagement.MVC.Models
     public class CreateLeaveTypeVM
     {
         [Required]
-        public string Name { get; set; }
+        public string LeaveName { get; set; }
 
         [Required]
         [Display(Name = "Default Number of Days")]
