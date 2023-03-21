@@ -29,5 +29,10 @@ namespace HR.LeaveManagement.MVC.Controllers
             ModelState.AddModelError("", "Log In Attemp Failed. Please try again.");
             return View(login);
         }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
     }
 }

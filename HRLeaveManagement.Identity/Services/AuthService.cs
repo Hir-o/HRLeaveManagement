@@ -41,7 +41,7 @@ namespace HRLeaveManagement.Identity.Services
                 Id = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
-                Token = jwtSecurityToken.Subject
+                Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
             };
 
             return response;
