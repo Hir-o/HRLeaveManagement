@@ -31,7 +31,7 @@ namespace HR.LeaveManagement.MVC.Services.Base
         {
             if (_localStorage.Exists("token"))
                 _client.HttpClient.DefaultRequestHeaders.Authorization = 
-                    new AuthenticationHeaderValue("Bearer", _localStorage.GetStorageValue<string>("token "));
+                    new AuthenticationHeaderValue("Bearer", _localStorage.GetStorageValue<string>("token"));
         }
     }
 }
